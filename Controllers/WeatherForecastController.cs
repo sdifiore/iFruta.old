@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace iFruta.Controllers
+namespace Fruta.Controllers
 {
     [ApiController]
     [Route("[controller]")]

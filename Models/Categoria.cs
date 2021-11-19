@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace iFruta.Models
+namespace Fruta.Models
 {
     
     [Table("Categorias")]
     public class Categoria
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [Key]
         public int Id { get; set; }
 
         [Required]

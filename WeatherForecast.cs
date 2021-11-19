@@ -1,4 +1,4 @@
-namespace iFruta
+namespace Fruta
 {
     public class WeatherForecast
     {

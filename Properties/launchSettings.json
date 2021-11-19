@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "iFruta": {
+    "Fruta": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

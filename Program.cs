@@ -1,8 +1,16 @@
-using iFruta.Models;
+using Fruta.Models;
 
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<FrutaDbContext>(opts =>
+{
+    var connString = builder.Configuration.GetConnectionString("Galileo");
+    opts.UseSqlServer(connString, options =>
+    {
+    });
+});
 
 // Add services to the container.
 
