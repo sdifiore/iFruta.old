@@ -3,23 +3,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Fruta.Models
 {
-
-    [Table("Produtos")]
-    public class Produto
+    [Table("Clientes")]
+    public class Cliente
     {
         [Key]
         public int Id { get; set; }
 
         [Required]
-        [StringLength(32)]
+        [StringLength(128)]
         public string Nome { get; set; } = string.Empty;
 
         [Required]
-        public float Preco { get; set; }
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(14)]
+        public string CPF { get; set; } = string.Empty;
 
-        [Required]
-        public float QtdEstoque { get; set; }
-
-        public Categoria Categorias { get; set; } = new Categoria();
+        public ICollection<Produto> Produtos { get; set; } = new List<Produto>();
     }
 }

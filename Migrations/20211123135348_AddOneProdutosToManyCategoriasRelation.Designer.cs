@@ -4,6 +4,7 @@ using Fruta.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace iFruta.Migrations
 {
     [DbContext(typeof(FrutaDbContext))]
-    partial class FrutaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211123135348_AddOneProdutosToManyCategoriasRelation")]
+    partial class AddOneProdutosToManyCategoriasRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +32,9 @@ namespace iFruta.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("CategoriaId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -42,30 +47,9 @@ namespace iFruta.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoriaId");
+
                     b.ToTable("Categorias");
-                });
-
-            modelBuilder.Entity("Fruta.Models.Cliente", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("CPF")
-                        .IsRequired()
-                        .HasMaxLength(14)
-                        .HasColumnType("VARCHAR(14)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Clientes");
                 });
 
             modelBuilder.Entity("Fruta.Models.Pedido", b =>
@@ -100,16 +84,10 @@ namespace iFruta.Migrations
                     b.Property<int>("CategoriasId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ClienteId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
-
-                    b.Property<int?>("PedidoId")
-                        .HasColumnType("int");
 
                     b.Property<float>("Preco")
                         .HasColumnType("real");
@@ -121,11 +99,29 @@ namespace iFruta.Migrations
 
                     b.HasIndex("CategoriasId");
 
-                    b.HasIndex("ClienteId");
-
-                    b.HasIndex("PedidoId");
-
                     b.ToTable("Produtos");
+                });
+
+            modelBuilder.Entity("PedidoProduto", b =>
+                {
+                    b.Property<int>("ProdutosId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProdutosId1")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProdutosId", "ProdutosId1");
+
+                    b.HasIndex("ProdutosId1");
+
+                    b.ToTable("PedidoProduto");
+                });
+
+            modelBuilder.Entity("Fruta.Models.Categoria", b =>
+                {
+                    b.HasOne("Fruta.Models.Categoria", null)
+                        .WithMany("Categorias")
+                        .HasForeignKey("CategoriaId");
                 });
 
             modelBuilder.Entity("Fruta.Models.Produto", b =>
@@ -136,25 +132,27 @@ namespace iFruta.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Fruta.Models.Cliente", null)
-                        .WithMany("Produtos")
-                        .HasForeignKey("ClienteId");
-
-                    b.HasOne("Fruta.Models.Pedido", null)
-                        .WithMany("Produtos")
-                        .HasForeignKey("PedidoId");
-
                     b.Navigation("Categorias");
                 });
 
-            modelBuilder.Entity("Fruta.Models.Cliente", b =>
+            modelBuilder.Entity("PedidoProduto", b =>
                 {
-                    b.Navigation("Produtos");
+                    b.HasOne("Fruta.Models.Pedido", null)
+                        .WithMany()
+                        .HasForeignKey("ProdutosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Fruta.Models.Produto", null)
+                        .WithMany()
+                        .HasForeignKey("ProdutosId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("Fruta.Models.Pedido", b =>
+            modelBuilder.Entity("Fruta.Models.Categoria", b =>
                 {
-                    b.Navigation("Produtos");
+                    b.Navigation("Categorias");
                 });
 #pragma warning restore 612, 618
         }
